@@ -1,7 +1,9 @@
+// pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import KanbanBoard from '../components/KanbanBoard';
 import TaskModal from '../components/TaskModal';
 import TaskDetailSidebar from '../components/TaskDetailSidebar';
+import { getAllTasks, addTask, updateTask, deleteTask } from '../utils/idb';
 
 function HomePage() {
   const [tasks, setTasks] = useState([]);
@@ -10,18 +12,18 @@ function HomePage() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeStatus, setActiveStatus] = useState('todo');
 
-  // Load tasks from localStorage
+  // Load tasks from IndexedDB
   useEffect(() => {
-    const savedTasks = localStorage.getItem('pwa-tasks');
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
+    const loadTasks = async () => {
+      try {
+        const storedTasks = await getAllTasks();
+        setTasks(storedTasks);
+      } catch (error) {
+        console.error('Error loading tasks:', error);
+      }
+    };
+    loadTasks();
   }, []);
-
-  // Save tasks to localStorage
-  useEffect(() => {
-    localStorage.setItem('pwa-tasks', JSON.stringify(tasks));
-  }, [tasks]);
 
   // Update selectedTask when tasks change
   useEffect(() => {
@@ -36,43 +38,69 @@ function HomePage() {
   }, [tasks]);
 
   // Add new task
-  const addTask = (taskData) => {
-    const newTask = {
-      id: Date.now(),
-      ...taskData,
-      status: 'todo',
-      createdAt: new Date().toISOString()
-    };
-    setTasks(prev => [...prev, newTask]);
-    setIsModalOpen(false);
+  const addNewTask = async (taskData) => {
+    try {
+      const newTask = {
+        id: Date.now(),
+        ...taskData,
+        status: 'todo',
+        createdAt: new Date().toISOString()
+      };
+      await addTask(newTask);
+      setTasks(prev => [...prev, newTask]);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding task:', error);
+      alert('Failed to add task');
+    }
   };
 
   // Update task
-  const updateTask = (taskId, updatedData) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId ? { ...task, ...updatedData } : task
-      )
-    );
-    setIsModalOpen(false);
-    setEditingTask(null);
+  const updateExistingTask = async (taskId, updatedData) => {
+    try {
+      const updatedTask = { ...tasks.find(task => task.id === taskId), ...updatedData };
+      await updateTask(updatedTask);
+      setTasks(prev =>
+        prev.map(task =>
+          task.id === taskId ? updatedTask : task
+        )
+      );
+      setIsModalOpen(false);
+      setEditingTask(null);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      alert('Failed to update task');
+    }
   };
 
   // Delete task
-  const deleteTask = (taskId) => {
-    setTasks(prev => prev.filter(task => task.id !== taskId));
-    setSelectedTask(null);
+  const deleteExistingTask = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+      setSelectedTask(null);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Failed to delete task');
+    }
   };
 
   // Move task between columns
-  const moveTask = (taskId, newStatus) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId ? { ...task, status: newStatus } : task
-      )
-    );
-    setActiveStatus(newStatus); // Switch to the new status column
-    setSelectedTask(null); // Close sidebar if open
+  const moveTask = async (taskId, newStatus) => {
+    try {
+      const updatedTask = { ...tasks.find(task => task.id === taskId), status: newStatus };
+      await updateTask(updatedTask);
+      setTasks(prev =>
+        prev.map(task =>
+          task.id === taskId ? updatedTask : task
+        )
+      );
+      setActiveStatus(newStatus); // Switch to the new status column
+      setSelectedTask(null); // Close sidebar if open
+    } catch (error) {
+      console.error('Error moving task:', error);
+      alert('Failed to move task');
+    }
   };
 
   // Open edit modal
@@ -115,7 +143,7 @@ function HomePage() {
             activeStatus={activeStatus}
             onTaskClick={setSelectedTask}
             onTaskEdit={openEditModal}
-            onTaskDelete={deleteTask}
+            onTaskDelete={deleteExistingTask}
             onTaskMove={moveTask}
           />
         </div>
@@ -125,8 +153,8 @@ function HomePage() {
           <TaskDetailSidebar
             task={selectedTask}
             onClose={() => setSelectedTask(null)}
-            onUpdate={updateTask}
-            onDelete={deleteTask}
+            onUpdate={updateExistingTask}
+            onDelete={deleteExistingTask}
           />
         )}
       </div>
@@ -161,7 +189,7 @@ function HomePage() {
       {isModalOpen && (
         <TaskModal
           task={editingTask}
-          onSave={editingTask ? updateTask : addTask}
+          onSave={editingTask ? updateExistingTask : addNewTask}
           onClose={closeModal}
         />
       )}
