@@ -1,0 +1,54 @@
+# 📝 TODO - PWA Task Manager (Engineering Thesis)
+
+## 🔧 Phase 1: Project Initialization
+- [ ] Create GitHub repository and clone locally
+- [ ] Initialize project using Vite + React
+- [ ] Install and configure Tailwind CSS
+- [ ] Set up folder structure (`components/`, `pages/`, `hooks/`, `utils/`, etc.)
+- [ ] Install `react-router-dom` and set up routing
+
+---
+
+## 🧱 Phase 2: Basic Task Manager Features
+- [ ] Design task data model: `title`, `description`, `dueDate`, `completed`
+- [ ] Build basic UI: Task List, Add Task Form, Task Item
+- [ ] Implement task creation
+- [ ] Implement task editing
+- [ ] Implement task deletion
+- [ ] Implement toggle for task completion
+- [ ] Manage task state using `useState` or `useReducer`
+- [ ] Persist tasks to localStorage
+- [ ] Load tasks from localStorage on startup
+
+---
+
+## 🌐 Phase 3: PWA Setup & Offline Support
+- [ ] Create `manifest.json` for PWA metadata
+- [ ] Register a Service Worker for offline support
+- [ ] Make app installable (Add to Home Screen)
+- [ ] Enable offline support for static assets and task data
+- [ ] (Optional) Switch to IndexedDB (`idb` package) for better offline persistence
+- [ ] Add manual or simulated data sync after reconnection
+
+---
+
+## 📱 Phase 4: Responsive Design & Polish
+- [ ] Style app with Tailwind for clean UI
+- [ ] Ensure layout is fully responsive (mobile, tablet, desktop)
+- [ ] Add accessibility enhancements (ARIA, contrast, keyboard nav)
+- [ ] Add app icon and splash screen for installable version
+
+---
+
+## 🧪 Phase 5: Testing & Deployment
+- [ ] Manually test on desktop and mobile browsers
+- [ ] Run Lighthouse PWA audit and fix issues
+- [ ] Deploy project to Netlify or Vercel
+- [ ] Write project documentation (README, user instructions)
+
+---
+
+## 📄 Phase 6: Final Report & Thesis Completion
+- [ ] Document development process and architecture
+- [ ] Reflect on challenges and benefits of PWA approach
+- [ ] Prepare slides or demo for final presentation
