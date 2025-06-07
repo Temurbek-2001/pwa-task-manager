@@ -4,7 +4,7 @@
 - [ ] Create GitHub repository and clone locally
 - [ ] Initialize project using Vite + React
 - [ ] Install and configure Tailwind CSS
-- [ ] Set up folder structure (`components/`, `pages/`, `hooks/`, `utils/`, etc.)
+- [ ] Set up folder structure (`components/`, `pages/`, `utils/`, etc.)
 - [ ] Install `react-router-dom` and set up routing
 
 ---

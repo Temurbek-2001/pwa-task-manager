@@ -1,5 +1,6 @@
 // pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import KanbanBoard from '../components/KanbanBoard';
 import TaskModal from '../components/TaskModal';
 import TaskDetailSidebar from '../components/TaskDetailSidebar';
@@ -12,7 +13,30 @@ function HomePage() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeStatus, setActiveStatus] = useState('todo');
 
-  // Load tasks from IndexedDB
+  // Simulate server sync (replace with real API call if backend exists)
+  const simulateServerSync = async (localTasks) => {
+    try {
+      // Mock server response: assume all tasks are "synced" and return with a server timestamp
+      const mockServerResponse = localTasks.map(task => ({
+        ...task,
+        syncedAt: new Date().toISOString(), // Add a synced timestamp
+      }));
+      // Update local IndexedDB with synced tasks
+      for (const task of mockServerResponse) {
+        await updateTask(task);
+      }
+      // Show toast notification instead of console.log
+      const taskCount = mockServerResponse.length;
+      toast.success(`Hey! Online back, synced ${taskCount} task${taskCount !== 1 ? 's' : ''}! 🎉`);
+      
+      return mockServerResponse;
+    } catch (error) {
+      console.error('Sync failed:', error);
+      return localTasks; // Return original tasks if sync fails
+    }
+  };
+
+  // Load tasks from IndexedDB on mount
   useEffect(() => {
     const loadTasks = async () => {
       try {
@@ -23,7 +47,28 @@ function HomePage() {
       }
     };
     loadTasks();
-  }, []);
+  }, []); 
+
+  // Set up online/offline listeners
+  useEffect(() => {
+    const handleOnline = async () => {
+      console.log('App is online, syncing tasks...');
+      const updatedTasks = await simulateServerSync(tasks);
+      setTasks(updatedTasks);
+    };
+
+    const handleOffline = () => {
+      toast.info("You're offline - changes saved locally 📡");
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [tasks]); 
 
   // Update selectedTask when tasks change
   useEffect(() => {
@@ -32,7 +77,7 @@ function HomePage() {
       if (updatedTask) {
         setSelectedTask(updatedTask);
       } else {
-        setSelectedTask(null); // Close sidebar if task no longer exists
+        setSelectedTask(null); 
       }
     }
   }, [tasks]);
@@ -49,6 +94,9 @@ function HomePage() {
       await addTask(newTask);
       setTasks(prev => [...prev, newTask]);
       setIsModalOpen(false);
+      
+      toast.success(` Task "${newTask.title}" added successfully! 🎉`);
+      
     } catch (error) {
       console.error('Error adding task:', error);
       alert('Failed to add task');
@@ -67,6 +115,7 @@ function HomePage() {
       );
       setIsModalOpen(false);
       setEditingTask(null);
+      toast.success(` Task "${updatedTask.title}" updated successfully! 🎉`);
     } catch (error) {
       console.error('Error updating task:', error);
       alert('Failed to update task');
@@ -79,6 +128,7 @@ function HomePage() {
       await deleteTask(taskId);
       setTasks(prev => prev.filter(task => task.id !== taskId));
       setSelectedTask(null);
+      toast.success('Task deleted successfully! 🎉');
     } catch (error) {
       console.error('Error deleting task:', error);
       alert('Failed to delete task');
@@ -97,6 +147,7 @@ function HomePage() {
       );
       setActiveStatus(newStatus); // Switch to the new status column
       setSelectedTask(null); // Close sidebar if open
+      toast.success(`Task "${updatedTask.title}" moved to ${newStatus}! 🎉`);
     } catch (error) {
       console.error('Error moving task:', error);
       alert('Failed to move task');

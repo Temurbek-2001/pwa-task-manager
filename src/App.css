@@ -1,0 +1,21 @@
+/* Global toast styles */
+.Toastify__toast-container {
+      z-index: 9999;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .Toastify__toast-container {
+        width: 90% !important;
+        left: 5% !important;
+        right: 5% !important;
+        top: 10px !important;
+      }
+    
+      .Toastify__toast {
+        font-size: 14px;
+        padding: 10px;
+        word-break: break-word;
+      }
+    }
+    
