@@ -1,4 +1,3 @@
-// pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import KanbanBoard from '../components/KanbanBoard';
@@ -176,8 +175,8 @@ function HomePage() {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
-            aria-label="Create new task"
+            className="bg-blue-700 text-white px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
+            aria-label="Create a new task"
           >
             <span className="text-base sm:text-lg">+</span>
             Create Task
@@ -188,7 +187,7 @@ function HomePage() {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Kanban Board */}
-        <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-auto">
+        <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-auto" role="region" aria-label="Kanban board">
           <KanbanBoard
             tasks={tasks}
             activeStatus={activeStatus}
@@ -211,7 +210,7 @@ function HomePage() {
       </div>
 
       {/* Mobile Status Navbar */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between items-center h-16 shadow-md z-50">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-between items-center h-16 shadow-md z-50" role="navigation" aria-label="Task status navigation">
         {[
           { id: 'todo', label: 'To Do', icon: '📋' },
           { id: 'inprogress', label: 'In Progress', icon: '⏳' },
@@ -225,10 +224,11 @@ function HomePage() {
             }}
             className={`flex-1 flex flex-col items-center justify-center h-full text-sm font-semibold transition-colors ${
               activeStatus === status.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
+                ? 'bg-blue-700 text-white'
+                : 'bg-white text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
             }`}
             aria-label={`Show ${status.label} tasks`}
+            aria-current={activeStatus === status.id ? 'true' : 'false'}
           >
             <span className="text-base">{status.icon}</span>
             <span>{status.label}</span>

@@ -34,15 +34,15 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
   const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Not set';
 
   const statusOptions = [
-    { value: 'todo', label: 'To Do', color: 'text-gray-500', bg: 'bg-gray-100', desktopColor: 'border-gray-300' },
-    { value: 'inprogress', label: 'In Progress', color: 'text-blue-500', bg: 'bg-blue-100', desktopColor: 'border-blue-300' },
-    { value: 'done', label: 'Done', color: 'text-green-500', bg: 'bg-green-100', desktopColor: 'border-green-300' }
+    { value: 'todo', label: 'To Do', color: 'text-gray-600', bg: 'bg-gray-200', desktopColor: 'border-gray-400' },
+    { value: 'inprogress', label: 'In Progress', color: 'text-blue-600', bg: 'bg-blue-200', desktopColor: 'border-blue-400' },
+    { value: 'done', label: 'Done', color: 'text-green-600', bg: 'bg-green-200', desktopColor: 'border-green-400' }
   ];
 
   const priorityOptions = [
-    { value: 'low', label: 'Low', color: 'border-green-500', desktopColor: 'bg-green-100 text-green-700' },
-    { value: 'medium', label: 'Medium', color: 'border-yellow-500', desktopColor: 'bg-yellow-100 text-yellow-700' },
-    { value: 'high', label: 'High', color: 'border-red-500', desktopColor: 'bg-red-100 text-red-700' }
+    { value: 'low', label: 'Low', color: 'border-green-600', desktopColor: 'bg-green-200 text-green-800' },
+    { value: 'medium', label: 'Medium', color: 'border-yellow-600', desktopColor: 'bg-yellow-200 text-yellow-800' },
+    { value: 'high', label: 'High', color: 'border-red-600', desktopColor: 'bg-red-200 text-red-800' }
   ];
 
   // Mobile Block-Based Layout (<640px)
@@ -54,7 +54,7 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           <input
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
-            className="text-lg font-bold text-gray-900 bg-transparent border-b-2 border-blue-500 focus:outline-none w-full"
+            className="text-lg font-bold text-gray-900 bg-transparent border-b-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
             autoFocus
             aria-label="Edit task title"
           />
@@ -62,16 +62,18 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           <h1
             className="text-lg font-bold text-gray-900 truncate"
             onClick={() => startEdit('title', task.title)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('title', task.title); }}
             tabIndex="0"
             role="button"
             aria-label="Edit task title"
+            id="task-detail-title"
           >
             {task.title}
           </h1>
         )}
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 text-xl"
+          className="text-gray-600 hover:text-gray-800 text-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           aria-label="Close task details"
         >
           ✕
@@ -83,14 +85,14 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
         {/* Status & Priority Block */}
         <div className="bg-white shadow-sm rounded-lg p-3">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs font-medium text-gray-700">Status</span>
+            <span className="text-xs font-medium text-gray-800">Status</span>
             {isEditing === 'status' ? (
               <div className="flex gap-2">
                 {statusOptions.map(opt => (
                   <button
                     key={opt.value}
                     onClick={() => updateField('status', opt.value)}
-                    className={`px-3 py-1 text-sm ${opt.color} ${opt.bg} rounded-md hover:scale-105 transition-all`}
+                    className={`px-3 py-1 text-sm ${opt.color} ${opt.bg} rounded-md hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                     aria-label={`Set status to ${opt.label}`}
                   >
                     {opt.label}
@@ -100,22 +102,22 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             ) : (
               <button
                 onClick={() => startEdit('status', task.status)}
-                className={`px-3 py-1 text-sm ${statusOptions.find(opt => opt.value === task.status)?.color} ${statusOptions.find(opt => opt.value === task.status)?.bg} rounded-md hover:scale-105 transition-all`}
-                aria-label="Edit status"
+                className={`px-3 py-1 text-sm ${statusOptions.find(opt => opt.value === task.status)?.color} ${statusOptions.find(opt => opt.value === task.status)?.bg} rounded-md hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+                aria-label={`Edit status, current: ${statusOptions.find(opt => opt.value === task.status)?.label || 'Not set'}`}
               >
                 {statusOptions.find(opt => opt.value === task.status)?.label || 'Not set'}
               </button>
             )}
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-xs font-medium text-gray-700">Priority</span>
+            <span className="text-xs font-medium text-gray-800">Priority</span>
             {isEditing === 'priority' ? (
               <div className="flex gap-2">
                 {priorityOptions.map(opt => (
                   <button
                     key={opt.value}
                     onClick={() => updateField('priority', opt.value)}
-                    className={`w-8 h-8 flex items-center justify-center text-sm border-2 ${opt.color} rounded-full hover:scale-105 transition-all`}
+                    className={`w-8 h-8 flex items-center justify-center text-sm border-2 ${opt.color} rounded-full hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                     aria-label={`Set priority to ${opt.label}`}
                   >
                     {opt.label[0]}
@@ -125,8 +127,8 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             ) : (
               <button
                 onClick={() => startEdit('priority', task.priority)}
-                className={`w-8 h-8 flex items-center justify-center text-sm border-2 ${priorityOptions.find(opt => opt.value === task.priority)?.color} rounded-full hover:scale-105 transition-all`}
-                aria-label="Edit priority"
+                className={`w-8 h-8 flex items-center justify-center text-sm border-2 ${priorityOptions.find(opt => opt.value === task.priority)?.color} rounded-full hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+                aria-label={`Edit priority, current: ${priorityOptions.find(opt => opt.value === task.priority)?.label || 'Not set'}`}
               >
                 {task.priority ? task.priority[0].toUpperCase() : '-'}
               </button>
@@ -137,13 +139,13 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
         {/* Due Date & Assignee Block */}
         <div className="bg-white shadow-sm rounded-lg p-3 flex gap-4">
           <div className="flex-1">
-            <span className="text-xs font-medium text-gray-700 mb-1 block">Due Date</span>
+            <span className="text-xs font-medium text-gray-800 mb-1 block">Due Date</span>
             {isEditing === 'dueDate' ? (
               <input
                 type="date"
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                className="p-2 text-base border border-gray-200 rounded-md w-full focus:ring-2 focus:ring-blue-500"
+                className="p-2 text-base border border-gray-200 rounded w-full focus:ring-2 focus:ring-blue-500"
                 autoFocus
                 aria-label="Edit due date"
               />
@@ -151,22 +153,23 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
               <div
                 className="p-2 text-base flex items-center gap-2 hover:bg-gray-50 rounded"
                 onClick={() => startEdit('dueDate', task.dueDate)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('dueDate', task.dueDate); }}
                 tabIndex="0"
                 role="button"
-                aria-label="Edit due date"
+                aria-label={`Edit due date, current: ${formatDate(task.dueDate)}`}
               >
-                <span className="text-gray-500">📅</span>
+                <span className="text-gray-600">📅</span>
                 {formatDate(task.dueDate)}
               </div>
             )}
           </div>
           <div className="flex-1">
-            <span className="text-xs font-medium text-gray-700 mb-1 block">Assignee</span>
+            <span className="text-xs font-medium text-gray-800 mb-1 block">Assignee</span>
             {isEditing === 'assignee' ? (
               <input
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                className="p-2 text-base border border-gray-200 rounded-md w-full focus:ring-2 focus:ring-blue-500"
+                className="p-2 text-base border border-gray-200 rounded w-full focus:ring-2 focus:ring-blue-500"
                 placeholder="Assignee..."
                 autoFocus
                 aria-label="Edit assignee"
@@ -175,11 +178,12 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
               <div
                 className="p-2 text-base flex items-center gap-2 hover:bg-gray-50 rounded"
                 onClick={() => startEdit('assignee', task.assignee)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('assignee', task.assignee); }}
                 tabIndex="0"
                 role="button"
-                aria-label="Edit assignee"
+                aria-label={`Edit assignee, current: ${task.assignee || 'Not assigned'}`}
               >
-                <span className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm">
+                <span className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm">
                   {task.assignee ? task.assignee[0].toUpperCase() : '👤'}
                 </span>
                 {task.assignee || 'Not assigned'}
@@ -190,12 +194,12 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
 
         {/* Description Block */}
         <div className="bg-white shadow-sm rounded-lg p-3">
-          <span className="text-xs font-medium text-gray-700 mb-1 block">Description</span>
+          <span className="text-xs font-medium text-gray-800 mb-1 block">Description</span>
           {isEditing === 'description' ? (
             <textarea
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
-              className="p-2 text-base border border-gray-200 rounded-md w-full focus:ring-2 focus:ring-blue-500"
+              className="p-2 text-base border border-gray-200 rounded w-full focus:ring-2 focus:ring-blue-500"
               rows="3"
               autoFocus
               aria-label="Edit description"
@@ -204,20 +208,21 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             <div
               className="p-2 text-base cursor-pointer hover:bg-gray-50 rounded"
               onClick={() => startEdit('description', task.description)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('description', task.description); }}
               tabIndex="0"
               role="button"
-              aria-label="Edit description"
+              aria-label={`Edit description, current: ${task.description || 'No description'}`}
             >
               {task.description ? (
                 <span className={showDesc ? '' : 'line-clamp-1'}>{task.description}</span>
               ) : (
-                <span className="text-gray-500 italic">No description</span>
+                <span className="text-gray-600 italic">No description</span>
               )}
               {task.description && task.description.length > 60 && (
                 <button
                   onClick={(e) => { e.stopPropagation(); setShowDesc(!showDesc); }}
-                  className="text-sm text-blue-500 hover:underline mt-1"
-                  aria-label={showDesc ? 'Show less' : 'Show more'}
+                  className="text-sm text-blue-600 hover:underline mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label={showDesc ? 'Show less description' : 'Show more description'}
                 >
                   {showDesc ? 'Less' : 'More'}
                 </button>
@@ -230,8 +235,9 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
         <div className="bg-white shadow-sm rounded-lg p-3">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="w-full text-sm text-blue-500 hover:underline flex justify-between items-center"
-            aria-label={showDetails ? 'Hide details' : 'Show details'}
+            className="w-full text-sm text-blue-600 hover:underline flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={showDetails ? 'Hide task details' : 'Show task details'}
+            aria-expanded={showDetails}
           >
             <span>Details</span>
             <span className={`transform transition-transform ${showDetails ? 'rotate-180' : ''}`}>▼</span>
@@ -239,11 +245,11 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           {showDetails && (
             <div className="mt-2 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-700">Task ID</span>
+                <span className="text-gray-800">Task ID</span>
                 <span className="text-gray-600 font-mono">#{task.id}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-700">Created</span>
+                <span className="text-gray-800">Created</span>
                 <span className="text-gray-600">{formatDate(task.createdAt)}</span>
               </div>
             </div>
@@ -254,8 +260,8 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
         <div className="bg-white shadow-sm rounded-lg p-3">
           <button
             onClick={() => window.confirm('Delete this task?') && onDelete(task.id)}
-            className="w-full py-2 text-sm text-red-500 border border-red-200 rounded-md hover:bg-red-50 hover:scale-105 transition-all"
-            aria-label="Delete task"
+            className="w-full py-2 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-100 hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={`Delete task ${task.title}`}
           >
             Delete Task
           </button>
@@ -267,14 +273,14 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
         <div className="fixed bottom-20 right-4 flex gap-2 z-50">
           <button
             onClick={saveEdit}
-            className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-md"
+            className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Save edit"
           >
             ✓
           </button>
           <button
             onClick={cancelEdit}
-            className="w-12 h-12 bg-gray-200 text-gray-700 rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-md"
+            className="w-12 h-12 bg-gray-200 text-gray-800 rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Cancel edit"
           >
             ✕
@@ -293,7 +299,7 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           <h2 className="text-xl font-bold text-gray-900">Task Details</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
+            className="text-gray-600 hover:text-gray-800 text-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Close task details"
           >
             ✕
@@ -304,22 +310,22 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             <input
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
-              className="text-base font-bold text-gray-900 border-b-2 border-blue-500 focus:outline-none w-full bg-gray-50 p-2 rounded"
+              className="text-base font-bold text-gray-900 border-b-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-gray-50 p-2 rounded"
               autoFocus
               aria-label="Edit task title"
             />
             <div className="flex gap-2">
               <button
                 onClick={saveEdit}
-                className="px-4 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
-                aria-label="Save title"
+                className="px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Save task title"
               >
                 Save
               </button>
               <button
                 onClick={cancelEdit}
-                className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100"
-                aria-label="Cancel edit"
+                className="px-4 py-1 text-sm text-gray-800 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Cancel title edit"
               >
                 Cancel
               </button>
@@ -329,9 +335,11 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           <h1
             className="text-base font-bold text-gray-900 cursor-pointer hover:bg-gray-50 p-2 rounded"
             onClick={() => startEdit('title', task.title)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('title', task.title); }}
             tabIndex="0"
             role="button"
             aria-label="Edit task title"
+            id="task-detail-title"
           >
             {task.title}
           </h1>
@@ -342,7 +350,7 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2" htmlFor="description-field">Description</label>
           {isEditing === 'description' ? (
             <div className="flex flex-col gap-2">
               <textarea
@@ -352,19 +360,20 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
                 rows="4"
                 autoFocus
                 aria-label="Edit description"
+                id="description-field"
               />
               <div className="flex gap-2">
                 <button
                   onClick={saveEdit}
-                  className="px-4 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  className="px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   aria-label="Save description"
                 >
                   Save
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100"
-                  aria-label="Cancel edit"
+                  className="px-4 py-1 text-sm text-gray-800 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label="Cancel description edit"
                 >
                   Cancel
                 </button>
@@ -374,25 +383,27 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             <div
               className="p-2 text-base bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
               onClick={() => startEdit('description', task.description)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('description', task.description); }}
               tabIndex="0"
               role="button"
-              aria-label="Edit description"
+              aria-label={`Edit description, current: ${task.description || 'No description'}`}
+              id="description-field"
             >
-              {task.description || <span className="text-gray-500 italic">No description</span>}
+              {task.description || <span className="text-gray-600 italic">No description</span>}
             </div>
           )}
         </div>
 
         {/* Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2" htmlFor="status-field">Status</label>
           {isEditing === 'status' ? (
             <div className="flex gap-2">
               {statusOptions.map(opt => (
                 <button
                   key={opt.value}
                   onClick={() => updateField('status', opt.value)}
-                  className={`px-4 py-1 text-base border ${opt.desktopColor} rounded hover:bg-gray-100`}
+                  className={`px-4 py-1 text-base border ${opt.desktopColor} rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                   aria-label={`Set status to ${opt.label}`}
                 >
                   {opt.label}
@@ -402,8 +413,9 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           ) : (
             <button
               onClick={() => startEdit('status', task.status)}
-              className={`px-4 py-1 text-base border ${statusOptions.find(opt => opt.value === task.status)?.desktopColor} rounded hover:bg-gray-100`}
-              aria-label="Edit status"
+              className={`px-4 py-1 text-base border ${statusOptions.find(opt => opt.value === task.status)?.desktopColor} rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+              aria-label={`Edit status, current: ${statusOptions.find(opt => opt.value === task.status)?.label || 'Not set'}`}
+              id="status-field"
             >
               {statusOptions.find(opt => opt.value === task.status)?.label || 'Not set'}
             </button>
@@ -412,14 +424,14 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
 
         {/* Priority */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2" htmlFor="priority-field">Priority</label>
           {isEditing === 'priority' ? (
             <div className="flex gap-2">
               {priorityOptions.map(opt => (
                 <button
                   key={opt.value}
                   onClick={() => updateField('priority', opt.value)}
-                  className={`px-4 py-1 text-base ${opt.desktopColor} rounded hover:bg-gray-100`}
+                  className={`px-4 py-1 text-base ${opt.desktopColor} rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                   aria-label={`Set priority to ${opt.label}`}
                 >
                   {opt.label}
@@ -429,8 +441,9 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
           ) : (
             <button
               onClick={() => startEdit('priority', task.priority)}
-              className={`px-4 py-1 text-base ${priorityOptions.find(opt => opt.value === task.priority)?.desktopColor} rounded hover:bg-gray-100`}
-              aria-label="Edit priority"
+              className={`px-4 py-1 text-base ${priorityOptions.find(opt => opt.value === task.priority)?.desktopColor} rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+              aria-label={`Edit priority, current: ${priorityOptions.find(opt => opt.value === task.priority)?.label || 'Not set'}`}
+              id="priority-field"
             >
               {priorityOptions.find(opt => opt.value === task.priority)?.label || 'Not set'}
             </button>
@@ -439,7 +452,7 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
 
         {/* Due Date */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2" htmlFor="due-date-field">Due Date</label>
           {isEditing === 'dueDate' ? (
             <div className="flex flex-col gap-2">
               <input
@@ -449,19 +462,20 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
                 className="p-2 text-base border border-gray-200 rounded bg-gray-50 w-full focus:ring-2 focus:ring-blue-500"
                 autoFocus
                 aria-label="Edit due date"
+                id="due-date-field"
               />
               <div className="flex gap-2">
                 <button
                   onClick={saveEdit}
-                  className="px-4 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  className="px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   aria-label="Save due date"
                 >
                   Save
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100"
-                  aria-label="Cancel edit"
+                  className="px-4 py-1 text-sm text-gray-800 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label="Cancel due date edit"
                 >
                   Cancel
                 </button>
@@ -471,9 +485,11 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             <div
               className="p-2 text-base bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
               onClick={() => startEdit('dueDate', task.dueDate)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('dueDate', task.dueDate); }}
               tabIndex="0"
               role="button"
-              aria-label="Edit due date"
+              aria-label={`Edit due date, current: ${formatDate(task.dueDate)}`}
+              id="due-date-field"
             >
               {formatDate(task.dueDate)}
             </div>
@@ -482,7 +498,7 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
 
         {/* Assignee */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Assignee</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2" htmlFor="assignee-field">Assignee</label>
           {isEditing === 'assignee' ? (
             <div className="flex flex-col gap-2">
               <input
@@ -492,19 +508,20 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
                 placeholder="Assignee..."
                 autoFocus
                 aria-label="Edit assignee"
+                id="assignee-field"
               />
               <div className="flex gap-2">
                 <button
                   onClick={saveEdit}
-                  className="px-4 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+                  className="px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   aria-label="Save assignee"
                 >
                   Save
                 </button>
                 <button
                   onClick={cancelEdit}
-                  className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100"
-                  aria-label="Cancel edit"
+                  className="px-4 py-1 text-sm text-gray-800 border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  aria-label="Cancel assignee edit"
                 >
                   Cancel
                 </button>
@@ -514,19 +531,21 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
             <div
               className="p-2 text-base bg-gray-50 rounded cursor-pointer hover:bg-gray-100 flex items-center gap-2"
               onClick={() => startEdit('assignee', task.assignee)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') startEdit('assignee', task.assignee); }}
               tabIndex="0"
               role="button"
-              aria-label="Edit assignee"
+              aria-label={`Edit assignee, current: ${task.assignee || 'Not assigned'}`}
+              id="assignee-field"
             >
               {task.assignee ? (
                 <>
-                  <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
+                  <span className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs">
                     {task.assignee[0].toUpperCase()}
                   </span>
                   {task.assignee}
                 </>
               ) : (
-                <span className="text-gray-500 italic">Not assigned</span>
+                <span className="text-gray-600 italic">Not assigned</span>
               )}
             </div>
           )}
@@ -534,21 +553,21 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
 
         {/* Task ID */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Task ID</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2">Task ID</label>
           <div className="p-2 text-base text-gray-600 font-mono">#{task.id}</div>
         </div>
 
         {/* Created Date */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Created</label>
+          <label className="block text-sm font-medium text-gray-800 mb-2">Created</label>
           <div className="p-2 text-base text-gray-600">{formatDate(task.createdAt)}</div>
         </div>
 
         {/* Delete */}
         <button
           onClick={() => window.confirm('Delete this task?') && onDelete(task.id)}
-          className="w-full py-2 text-sm text-red-500 border border-red-300 rounded hover:bg-red-50"
-          aria-label="Delete task"
+          className="w-full py-2 text-sm text-red-600 border border-red-400 rounded hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-label={`Delete task ${task.title}`}
         >
           Delete Task
         </button>
@@ -559,8 +578,8 @@ function TaskDetailSidebar({ task, onClose, onUpdate, onDelete }) {
   return (
     <div 
       className="fixed top-0 bottom-16 sm:bottom-0 right-0 w-full sm:w-80 md:w-96 bg-gray-50 sm:bg-white sm:border-l sm:border-gray-200 rounded-t-2xl sm:rounded-none flex flex-col z-40 sm:z-10 transition-all duration-300"
-      role="dialog"
-      aria-labelledby="task-detail-title"
+      role="complementary"
+      aria-label={`Details for task ${task.title}`}
     >
       {window.innerWidth < 640 ? <MobileLayout /> : <DesktopLayout />}
     </div>

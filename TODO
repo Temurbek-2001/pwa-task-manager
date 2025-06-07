@@ -27,7 +27,7 @@
 - [ ] Register a Service Worker for offline support
 - [ ] Make app installable (Add to Home Screen)
 - [ ] Enable offline support for static assets and task data
-- [ ] (Optional) Switch to IndexedDB (`idb` package) for better offline persistence
+- [ ] Switch to IndexedDB (`idb` package) for better offline persistence
 - [ ] Add manual or simulated data sync after reconnection
 
 ---

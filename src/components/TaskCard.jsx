@@ -21,10 +21,10 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-400';
+      case 'high': return 'bg-red-600';
+      case 'medium': return 'bg-yellow-600';
+      case 'low': return 'bg-green-600';
+      default: return 'bg-gray-500';
     }
   };
 
@@ -41,16 +41,25 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
     e.dataTransfer.effectAllowed = 'move';
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       className={`bg-white rounded-lg border-2 p-3 sm:p-4 cursor-move touch-none transition-all duration-200 relative ${
-        isOverdue ? 'border-red-200 bg-red-50' : 'border-gray-200 hover:border-blue-300'
+        isOverdue ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-blue-400'
       }`}
       draggable="true"
       onDragStart={handleDragStart}
       onClick={onClick}
-      role="button"
+      onKeyDown={handleKeyDown}
+      role="listitem"
       aria-label={`Task: ${task.title}`}
+      tabIndex={0}
     >
       {/* Task Content */}
       <div className="flex items-start justify-between mb-2">
@@ -59,15 +68,19 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
         </h4>
         <div className="flex items-center gap-1 ml-2">
           {task.priority && (
-            <div className={`w-2 h-2 rounded-full ${getPriorityColor(task.priority)}`} />
+            <div 
+              className={`w-2 h-2 rounded-full ${getPriorityColor(task.priority)}`} 
+              aria-label={`Priority: ${task.priority}`}
+            />
           )}
           <button
             onClick={(e) => {
               e.stopPropagation();
               setShowActions(!showActions);
             }}
-            className="text-gray-400 hover:text-gray-600 p-1 text-base sm:text-lg"
-            aria-label="Task actions"
+            className="text-gray-600 hover:text-gray-800 p-1 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={`Toggle actions for task ${task.title}`}
+            aria-expanded={showActions}
           >
             ⋮
           </button>
@@ -76,7 +89,7 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
 
       {/* Task Description */}
       {task.description && (
-        <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-3 sm:line-clamp-2">
+        <p className="text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3 line-clamp-3 sm:line-clamp-2">
           {task.description}
         </p>
       )}
@@ -85,7 +98,7 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
       <div className="flex items-center justify-between text-xs sm:text-sm">
         {task.dueDate && (
           <span className={`px-2 py-1 rounded ${
-            isOverdue ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'
+            isOverdue ? 'bg-red-200 text-red-900' : 'bg-gray-100 text-gray-700'
           }`}>
             📅 {formatDueDate(task.dueDate)}
           </span>
@@ -93,7 +106,10 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
         
         <div className="flex items-center gap-2">
           {task.assignee && (
-            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+            <div 
+              className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-medium"
+              aria-label={`Assigned to ${task.assignee}`}
+            >
               {task.assignee.charAt(0).toUpperCase()}
             </div>
           )}
@@ -102,7 +118,11 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
 
       {/* Actions Dropdown */}
       {showActions && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40 sm:min-w-48">
+        <div 
+          className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-40 sm:min-w-48"
+          role="menu"
+          aria-label={`Actions for task ${task.title}`}
+        >
           <div className="py-1">
             <button
               onClick={(e) => {
@@ -110,7 +130,9 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
                 onEdit();
                 setShowActions(false);
               }}
-              className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100"
+              className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              role="menuitem"
+              aria-label={`Edit task ${task.title}`}
             >
               ✏️ Edit Task
             </button>
@@ -123,7 +145,9 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
                   onMove(task.id, action.status);
                   setShowActions(false);
                 }}
-                className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100"
+                className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                role="menuitem"
+                aria-label={action.label}
               >
                 🔄 {action.label}
               </button>
@@ -138,7 +162,9 @@ function TaskCard({ task, onClick, onEdit, onDelete, onMove }) {
                 }
                 setShowActions(false);
               }}
-              className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-600 hover:bg-red-50"
+              className="w-full text-left px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-700 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              role="menuitem"
+              aria-label={`Delete task ${task.title}`}
             >
               🗑️ Delete Task
             </button>
